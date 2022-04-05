@@ -18,6 +18,9 @@ public:
 
     std::vector<Card*> visibleCards;
 
+    double getHiLoIdx();
+
+    int getPointCount();
 
 private:
     std::vector<Player*> players;
@@ -28,8 +31,11 @@ private:
 
     int usedCardsCount;
 
+    int totalSeenCards;
+
     int handsToPlay;
 
+    int pointCount;
 
     void initialDeal();
 

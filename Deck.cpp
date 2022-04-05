@@ -1,7 +1,7 @@
 // Deck.cpp
 
 #include "Deck.hpp"
-
+#include "Card.hpp"
 
 
 Deck::Deck(int numberOfDecks) 
@@ -35,7 +35,7 @@ void Deck::shuffle()
     }
     // Shuffle all unused cards
     auto rng = std::default_random_engine {};
-    std::shuffle(std::being(unusedCards), std::end(unusedCards), rng);
+    std::shuffle(std::begin(unusedCards), std::end(unusedCards), rng);
 }
 
 

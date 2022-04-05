@@ -57,3 +57,7 @@ void Player::increaseCapital(int win) {
 void Player::decreaseCapital(int loss) {
     capital -= loss;
 }
+
+void Player::settleBet() {
+    betSettled = true;
+}

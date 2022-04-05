@@ -14,6 +14,14 @@ int Dealer::makeDecision() {
 }
 
 void Dealer::dealCard(Card *c) {
+    cards.push_back(c);
+}
 
-
+int Dealer::getScore() {
+    int score = 0;
+    for (Card *c : cards) {
+        // Add up scores
+        score += c->getValue();
+    }
+    return score;
 }

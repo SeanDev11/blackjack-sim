@@ -18,6 +18,10 @@ public:
     void decreaseCapital(int loss);
 
     void dealCard(Card* c);
+
+    void settleBet();
+
+    int getScore();
 private:
     bool betSettled;
     int betAmount;
@@ -25,7 +29,7 @@ private:
 
     std::vector<Card*> cards;
 
-    int getScore();
+    
 };
 
 #endif
