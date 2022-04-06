@@ -8,7 +8,7 @@
 class Player
 {
 public:
-    void placeBet();
+    void placeBet(double idx);
     int makeDecision();
     bool isSettled();
 

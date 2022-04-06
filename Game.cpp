@@ -66,8 +66,9 @@ void Game::play() {
         visibleCards.clear();
 
         // Players place bets
+        double hiLoIndex = getHiLoIdx();
         for (Player *p : players) {
-            p->placeBet();
+            p->placeBet(hiLoIndex);
         }
         // Cards are dealt
         initialDeal();
@@ -151,7 +152,7 @@ void Game::initialDeal() {
 }
 
 double Game::getHiLoIdx() {
-    double idx = double(getPointCount())/(deck->getCardCount()-totalSeenCards);
+    double idx = 100*(double(getPointCount())/(deck->getCardCount()-totalSeenCards));
     return idx;
 }
 

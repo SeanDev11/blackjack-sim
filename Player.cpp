@@ -6,13 +6,21 @@
 
 Player::Player() {}
 
-void Player::placeBet() {
+void Player::placeBet(double idx) {
     betSettled = false;
     // DECISION MAKING BASED ON FAVORABLE SITUATION
-    int bet = 0;
-
-
-
+    int bet = 10;
+    if (idx < 3) {
+        bet = 10;
+    } else if (idx < 5) {
+        bet = 20;
+    } else if (idx < 7) {
+        bet = 30;
+    } else if (idx < 9) {
+        bet = 40;
+    } else {
+        bet = 50;
+    }
     betAmount = bet;
 }
 
