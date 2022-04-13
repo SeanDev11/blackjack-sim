@@ -2,10 +2,7 @@
 
 #include "Card.hpp"
 
-Card::Card(int val) 
-: value{val}
-{}
-
+Card::Card(int val) : value(val) {}
 
 int Card::getValue() {
     return value;

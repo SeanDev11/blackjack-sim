@@ -8,6 +8,8 @@
 #include <random>
 #include <iostream>
 
+#include "Card.hpp"
+
 class Deck
 {
 public:
@@ -19,6 +21,8 @@ public:
 
     Card* getTop();
     int getCardCount();
+
+    int getUsedCardCount();
 private:
     int numDecks;
 
@@ -28,8 +32,6 @@ private:
 
 
 };
-
-
 
 
 #endif

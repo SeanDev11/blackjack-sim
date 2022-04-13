@@ -4,7 +4,7 @@
 
 #include "Card.hpp"
 
-Dealer::Dealer() {}
+// Dealer::Dealer() {}
 
 
 int Dealer::makeDecision() {
@@ -24,10 +24,12 @@ int Dealer::makeDecision() {
     } else {
         return 0;
     }
-
 }
 
 void Dealer::dealCard(Card *c) {
+    if (c->getValue() == 1) {
+        c->setValue(11);
+    }
     cards.push_back(c);
 }
 
@@ -40,3 +42,10 @@ int Dealer::getScore() {
     return score;
 }
 
+int Dealer::getUpCard() {
+    return cards[0]->getValue();
+}
+
+Card* Dealer::getCard(int i) {
+    return cards[1];
+}

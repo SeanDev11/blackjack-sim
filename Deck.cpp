@@ -34,7 +34,8 @@ void Deck::shuffle()
         std::cout << "ERROR IN SHUFFLE!!!";
     }
     // Shuffle all unused cards
-    auto rng = std::default_random_engine {};
+    std::random_device rd;
+    std::default_random_engine rng(rd());
     std::shuffle(std::begin(unusedCards), std::end(unusedCards), rng);
 }
 
@@ -53,4 +54,9 @@ Card* Deck::getTop() {
 
 void Deck::burnCard() {
     getTop();
+}
+
+
+int Deck::getUsedCardCount() {
+    return usedCards.size();
 }

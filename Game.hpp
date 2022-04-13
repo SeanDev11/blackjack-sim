@@ -9,10 +9,19 @@
 #include "Dealer.hpp"
 #include "Card.hpp"
 
+namespace constants
+{
+    const bool LOGGING = false;
+
+}
+
+
+
+
 class Game
 {
 public:
-    Game(int numDecks, int numPlayers);
+    Game(int numDecks, int numPlayers, int hands);
 
     void play();
 
@@ -22,6 +31,8 @@ public:
 
     int getPointCount();
 
+    void printPlayerBalances();
+
 private:
     std::vector<Player*> players;
 
@@ -29,13 +40,13 @@ private:
 
     Dealer dealer;
 
-    int usedCardsCount;
+    //int usedCardsCount = 0;
 
-    int totalSeenCards;
+    int totalSeenCards = 0;
 
     int handsToPlay;
 
-    int pointCount;
+    int pointCount = 0;
 
     void initialDeal();
 
