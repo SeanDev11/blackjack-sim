@@ -8,7 +8,8 @@
 #include "Card.hpp"
 #include "Deck.hpp"
 #include <iostream>
-#include "Game.hpp"
+
+class Game;
 
 class Player
 {
@@ -43,6 +44,8 @@ private:
     std::vector< std::vector<Card*> > hands;
     
     void doubleDown(int hand, Deck* deck, Game* gm);
+
+    bool checkHandMakeup(int hand, int c1, int c2);
 
     void splitPair(int hand, Deck* deck, Game* gm);
 

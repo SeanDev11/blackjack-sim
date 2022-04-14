@@ -1,8 +1,8 @@
 // Player.cpp
 
 #include "Player.hpp"
-// MIGHT HAVE TO PUT INTO HEADER
-#include "Card.hpp"
+#include "Game.hpp"
+
 
 // Player::Player() {}
 
@@ -622,11 +622,233 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                         }
                     default:
                         break;
-
                 }
             } else {
                 // Soft Hand
+                int aceIdx = -1;
+                int otherIdx = 1;
+                for (int i = 0; i < 2; i++) {
+                    if (hands[hand][i]->getValue() == 11) {
+                        aceIdx = i;
+                    }
+                }
+                if (aceIdx == 1) {
+                    otherIdx = 0;
+                }
+                if (aceIdx > -1) {
+                    switch (hands[hand][otherIdx]->getValue()) {
+                        case 9:
+                            switch(dealerUpCard) {
+                                case 3:
+                                    if (hiLoIdx > 20) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > 12) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > 8) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > 8) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }       
+                        case 8:
+                            switch(dealerUpCard) {
+                                case 3:
+                                    if (hiLoIdx > 9) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > 5) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > 1) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > 0) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }      
+                        case 7:
+                            switch(dealerUpCard) {
+                                case 3:
+                                    if (hiLoIdx > -2) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > -15) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > -18) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > -23) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }      
+                        case 6:
+                            switch(dealerUpCard) {
+                                case 2:
+                                    if (hiLoIdx > 1) {
+                                        if (hiLoIdx < 10) {
+                                            doubleDown(hand, deck, gm);
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    if (hiLoIdx > -6) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > -14) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > -28) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > -30) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }      
+                        case 5:
+                            switch(dealerUpCard) {
+                                case 3:
+                                    if (hiLoIdx > 21) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > -6) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > -16) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > -32) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }      
+                        case 4:
+                            switch(dealerUpCard) {
+                                case 3:
+                                    if (hiLoIdx > 19) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > -7) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > -16) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > -23) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }      
+                        case 3:
+                            switch(dealerUpCard) {
+                                case 3:
+                                    if (hiLoIdx > 11) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > -3) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > -13) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > -19) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }      
+                        case 2:
+                            switch(dealerUpCard) {
+                                case 3:
+                                    if (hiLoIdx > 10) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 4:
+                                    if (hiLoIdx > 2) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 5:
+                                    if (hiLoIdx > -19) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                case 6:
+                                    if (hiLoIdx > -13) {
+                                        doubleDown(hand, deck, gm);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }      
 
+                        default:
+                            break;
+                    }
+                }
             }
         }
     }
@@ -737,4 +959,23 @@ bool Player::isHardHand(int hand) {
 
     }
     return hard;
+}
+
+
+bool Player::checkHandMakeup(int hand, int c1, int c2) {
+    if (hands[hand][0]->getValue() == c1) {
+        if (hands[hand][1]->getValue() == c2) {
+            return true;
+        } else {
+            return false;
+        }
+    } else if (hands[hand][1]->getValue() == c1) {
+        if (hands[hand][0]->getValue() == c2) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }

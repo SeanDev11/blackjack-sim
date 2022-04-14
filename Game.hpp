@@ -4,7 +4,7 @@
 #define GAME_HPP
 
 #include <vector>
-#include "Player.hpp"
+
 #include "Deck.hpp"
 #include "Dealer.hpp"
 #include "Card.hpp"
@@ -15,8 +15,7 @@ namespace constants
 
 }
 
-
-
+class Player;
 
 class Game
 {

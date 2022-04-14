@@ -1,6 +1,7 @@
 // Game.cpp
 
 #include "Game.hpp"
+#include "Player.hpp"
 
 Game::Game(int numDecks, int numPlayers, int hands) 
 : deck{new Deck(numDecks)}, handsToPlay{hands}
