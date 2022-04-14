@@ -17,42 +17,49 @@ void Game::settleBets() {
     // Check for player busts
     for (Player *p : players) {
         for (int i = 0; i < p->getNumHands(); i++) {
-            if (p->getScore(i) > 21) {
-                // Player loses bet
-                p->decreaseCapital(p->getBetAmount(i));
-                p->settleBet(i);
+            if (p->isSettled(i) == false) {
+                if (p->getScore(i) > 21) {
+                    // Player loses bet
+                    p->decreaseCapital(p->getBetAmount(i));
+                    p->settleBet(i);
+                }
             }
         }
     }
     // Check for dealer bust
     if (dealer.getScore() > 21) {
         for (Player *p : players) {
-            if (p->isSettled() == false) {
+            //if (p->isSettled() == false) {
                 // Player wins bet
                 for (int i = 0; i < p->getNumHands(); i++) {
-                    p->increaseCapital(p->getBetAmount(i));
-                    p->settleBet(i);
-                }
-            }
-        }
-    } else {
-        for (Player *p : players) {
-            if (p->isSettled() == false) {
-                for (int i = 0; i < p->getNumHands(); i++) {
-                    if (p->getScore(i) > dealer.getScore()) {
-                        // Player wins bet
+                    if (p->isSettled(i) == false) {
                         p->increaseCapital(p->getBetAmount(i));
-                        p->settleBet(i);
-                    } else if (p->getScore(i) < dealer.getScore()) {
-                        // Player loses bet
-                        p->decreaseCapital(p->getBetAmount(i));
-                        p->settleBet(i);
-                    } else {
-                        // No money changes hands
                         p->settleBet(i);
                     }
                 }
-            }
+            //}
+        }
+    } else {
+        for (Player *p : players) {
+            //if (p->isSettled() == false) {
+                for (int i = 0; i < p->getNumHands(); i++) {
+                    if (p->isSettled(i) == false) {
+                        if (p->getScore(i) > dealer.getScore()) {
+                            // Player wins bet
+                            p->increaseCapital(p->getBetAmount(i));
+                            p->settleBet(i);
+                        } else if (p->getScore(i) < dealer.getScore()) {
+                            // Player loses bet
+                            p->decreaseCapital(p->getBetAmount(i));
+                            p->settleBet(i);
+                        } else {
+                            // No money changes hands
+                            playerTieCnt[0] += 1;
+                            p->settleBet(i);
+                        }
+                    }
+                }
+            //}
         }
     }
 }
@@ -75,25 +82,34 @@ void Game::play() {
     for (int i = 0; i < handsToPlay; i++) {
         // Clear visible cards
         // MIGHT HAVE TO CHANGE SO THAT ELEMENTS ARE NOT DELETED. ALSO SEE POP_BACK USAGE TO AVOID DESTROYING ELEMENTS
-        std::cout << "Hand: " << i << std::endl;
+        dealer.clearHand();
+
+        for (Player *p : players) {
+            p->clearHands();
+            p->resetInsurance();
+        }
+
+        deck->setAces();
+
         if (constants::LOGGING) {
+            std::cout << "Hand: " << i << std::endl;
             std::cout << "Clearing visible cards" << std::endl;
         }
-
-        for (Card* c : visibleCards) {
-            std::cout << c->getValue() << " ";
-
+        if (constants::LOGGING) {
+            for (Card* c : visibleCards) {
+                std::cout << c->getValue() << " ";
+            }
         }
-        std::cout << std::endl;
+        
         visibleCards.clear();
         if (constants::LOGGING) {
             std::cout << "Placing bets" << std::endl;
         }
         // Players place bets
         double hiLoIndex = getHiLoIdx();
-
-        std::cout << "HILO IDX " << hiLoIndex << std::endl;
-
+        if (constants::LOGGING) {
+            std::cout << "HILO IDX " << hiLoIndex << std::endl;
+        }
         
         
 
@@ -105,6 +121,35 @@ void Game::play() {
         }
         // Cards are dealt
         initialDeal();
+
+        // Insurance
+        if (dealer.getUpCard() == 11) {
+            if (getHiLoIdx() > 8) {
+                // Insure
+                for (Player *p : players) {
+                    p->insure(0);
+                }
+            }
+
+        }
+        
+        if (constants::LOGGING) {
+            std::cout << "Player: ";
+            for (Player *p : players) {
+                for (Card *c : p->getHand(0)) {
+                    std::cout << c->getValue() << " ";
+                }
+            }
+            std::cout << "= " << players[0]->getScore(0) << std::endl;
+
+            std::cout << "Dealer: ";
+            for (Card* c : dealer.getHand()) {
+                std::cout << c->getValue() << " ";
+            }
+
+            std::cout << "= " << dealer.getScore() << std::endl;
+        }
+
         if (constants::LOGGING) {
             std::cout << "Naturals check" << std::endl;
         }
@@ -116,10 +161,10 @@ void Game::play() {
         for (Player *p : players) {
             // Make decision ends when player busts or decides to stand
             // HANDLE BUSTS
-            if (p->isSettled() == false) {
+            if (p->isSettled(0) == false) {
                 for (int i = 0; i < 4; i++) {
                     while (p->makeDecision(dealer.getUpCard(), i, deck, getHiLoIdx(), this) == 0) {
-                        std::cout << "WHEELIN DEALIN " << std::endl;
+                        playerDrawCnt[0] += 1;
                         p->dealCard(deck->getTop(), i, this);
                     }
                 }
@@ -146,16 +191,20 @@ void Game::play() {
         if (constants::LOGGING) {
             std::cout << "USED CARDS COUNT: " << deck->getUsedCardCount() << std::endl;
         }
-        if ((double(deck->getUsedCardCount())/(deck->getCardCount())) >= 0.75) {
-            std::cout << "SHUFFLING DECK AGAIN" << std::endl;
+        if ((double(deck->getUsedCardCount())/(deck->getCardCount())) >= 0.8) {
+            if (constants::LOGGING) {
+                std::cout << "SHUFFLING DECK AGAIN" << std::endl;
+            }
             deck->shuffle();
             deck->burnCard();
             totalSeenCards = 0;
             pointCount = 0;
+            shuffleCnt +=1;
         }
 
-        std::cout << std::endl;
+        
     }
+    std::cout << "Shuffle Count: " << shuffleCnt << std::endl;
 }
 
 void Game::checkNaturals() {
@@ -164,8 +213,14 @@ void Game::checkNaturals() {
     // Check dealer natural
     if (dealer.getScore() == 21) {
         for (Player *p : players) {
+            if (p->isInsured() == true) {
+                p->increaseCapital(2*(p->getSideBet()));
+            }
+
             if (p->getScore(0) == 21) {
                 // No money changes hands
+                playerTieCnt[0] += 1;
+                playerNaturalCnt[0] += 1;
                 p->settleBet(0);
 
             } else {
@@ -178,7 +233,8 @@ void Game::checkNaturals() {
         for (Player *p : players) {
             if (p->getScore(0) == 21) {
                 // Player gets paid 3:2
-                p->increaseCapital(0.5*p->getBetAmount(0));
+                playerNaturalCnt[0] += 1;
+                p->increaseCapital(0.5*(p->getBetAmount(0)));
                 p->settleBet(0);
             }
         }
@@ -223,7 +279,7 @@ void Game::initialDeal() {
 }
 
 double Game::getHiLoIdx() {
-    std::cout << "POINT COUNT: " << double(getPointCount()) << " CARD COUNT: " << deck->getCardCount() << " " << "SEEN CARDS: " << totalSeenCards << std::endl;
+    // std::cout << "POINT COUNT: " << double(getPointCount()) << " CARD COUNT: " << deck->getCardCount() << " " << "SEEN CARDS: " << totalSeenCards+visibleCards.size() << std::endl;
 
     double idx = 100*(double(getPointCount())/(deck->getCardCount()-(totalSeenCards+visibleCards.size())));
     return idx;
@@ -258,12 +314,22 @@ int Game::getPointCount() {
 }
 
 
-void Game::printPlayerBalances() {
+void Game::printPlayerStats() {
     int i = 1;
     for (Player *p : players) {
-        std::cout << "Player " << i << ": $";
-        std::cout << p->getCapital() << std::endl;
+        std::cout << "--------" << std::endl;
+        std::cout << "Player " << i << std::endl;
+        std::cout << "$ " << p->getCapital() << std::endl;
+        
+        std::cout << "Hands won: " << p->getWinCnt() << std::endl;
+        std::cout << "Hands lost: " << p->getLossCnt() << std::endl;
+        std::cout << "Hands tied: " << playerTieCnt[0] << std::endl;
+        std::cout << "Naturals: " << playerNaturalCnt[0] << std::endl;
+        std::cout << "Draws: " << playerDrawCnt[0] << std::endl;
+        std::cout << "Pairs split: " << p->getSplitPairCnt() << std::endl;
+        std::cout << "Doubled down: " << p->getDoubleDownCnt() << std::endl;
 
+        std::cout << "--------" << std::endl;
     }
 
 

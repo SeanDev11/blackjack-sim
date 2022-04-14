@@ -60,3 +60,11 @@ void Deck::burnCard() {
 int Deck::getUsedCardCount() {
     return usedCards.size();
 }
+
+void Deck::setAces() {
+    for (Card* c : unusedCards) {
+        if (c->getValue() == 1) {
+            c->setValue(11);
+        }
+    } 
+}

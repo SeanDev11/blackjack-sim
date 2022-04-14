@@ -11,6 +11,7 @@ int Dealer::makeDecision() {
     // returns 0 if hit, 1 if stand
     // Dealer stands on soft 17
     int score = getScore();
+    // was 16
     if (score > 16) {
         if (score > 21) {
             for (Card *c : cards) {
@@ -48,4 +49,12 @@ int Dealer::getUpCard() {
 
 Card* Dealer::getCard(int i) {
     return cards[1];
+}
+
+std::vector<Card*> Dealer::getHand() {
+    return cards;
+}
+
+void Dealer::clearHand() {
+    cards.clear();
 }

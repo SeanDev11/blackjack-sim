@@ -13,8 +13,12 @@ public:
     void dealCard(Card *c);
     int getUpCard();
     int getScore();
-
     Card* getCard(int i);
+
+    std::vector<Card*> getHand();
+
+    void clearHand();
+
 private:
     std::vector<Card*> cards;
 };

@@ -30,7 +30,7 @@ public:
 
     int getPointCount();
 
-    void printPlayerBalances();
+    void printPlayerStats();
 
 private:
     std::vector<Player*> players;
@@ -52,6 +52,14 @@ private:
     void settleBets();
 
     void checkNaturals();
+
+    int shuffleCnt = 0;
+
+    int playerDrawCnt[7] = {0,0,0,0,0,0,0};
+
+    int playerNaturalCnt[7] = {0,0,0,0,0,0,0};
+
+    int playerTieCnt[7] = {0,0,0,0,0,0,0};
     
 };
 

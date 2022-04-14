@@ -7,7 +7,8 @@
 // Player::Player() {}
 
 void Player::placeBet(double idx) {
-    betSettled[0] = false;
+    resetBets();
+    
     // DECISION MAKING BASED ON FAVORABLE SITUATION
     int bet = 10;
     if (idx < 3) {
@@ -24,6 +25,15 @@ void Player::placeBet(double idx) {
     betAmount[0] = bet;
 }
 
+void Player::resetBets() {
+    for (int i = 0; i < 4; i++) {
+        betSettled[i] = false;
+        betAmount[i] = 0;
+        standing[i] = false;
+    }
+}
+
+
 int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx, Game* gm) {
     // DECISION TO HIT OR STAND
     // 0 = hit, 1 = stand
@@ -34,7 +44,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
 
     if (standing[hand] == true) {return 1;}
 
-    int decision = 0;
+    int decision = 1;
     int score = getScore(hand);
 
     if (score == 21) {return 1;}
@@ -42,6 +52,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
     // Check for pair
     if ((hands[hand].size() == 2) && (hands.size() < 4)) {
         if (hands[hand][0]->getValue() == hands[hand][1]->getValue()) {
+            //std::cout << "GOT PAIR" << std::endl;
             switch (hands[hand][0]->getValue()) {
                 case 11:
                     if (dealerUpCard < 7) {
@@ -384,51 +395,61 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 if (idx > -3) {
                                     // DOUBLE DOWN
                                     doubleDown(hand, deck, gm);
+                                    return 1; 
                                 }
                                 break;
                             case 10:
                                 if (idx > -9) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             case 9:
                                 if (idx > -10) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 8:
                                 if (idx > -16) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 7:
                                 if (idx > -26) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             case 6:
                                 if (idx > -35) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 5:
                                 if (idx > -33) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 4:
                                 if (idx > -29) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 3:
                                 if (idx > -26) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 2:
                                 if (idx > -23) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             default:
@@ -440,51 +461,61 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 if (idx > 6) {
                                     // DOUBLE DOWN
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             case 10:
                                 if (idx > 7) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             case 9:
                                 if (idx > -3) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 8:
                                 if (idx > -9) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 7:
                                 if (idx > -17) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             case 6:
                                 if (idx > -26) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 5:
                                 if (idx > -24) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 4:
                                 if (idx > -21) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 3:
                                 if (idx > -17) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 2:
                                 if (idx > -15) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             default:
@@ -495,36 +526,43 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             case 8:
                                 if (idx > 14) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 7:
                                 if (idx > 4) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             case 6:
                                 if (idx > -12) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 5:
                                 if (idx > -10) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 4:
                                 if (idx > -5) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 3:
                                 if (idx > 0) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 2:
                                 if (idx > 3) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             default:
@@ -535,26 +573,31 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             case 7:
                                 if (idx > 22) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             case 6:
                                 if (idx > 5) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 5:
                                 if (idx > 5) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 4:
                                 if (idx > 11) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 3:
                                 if (idx > 22) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             default:
@@ -565,21 +608,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             case 6:
                                 if (idx > 17) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 5:
                                 if (idx > 14) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 4:
                                 if (idx > 21) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 3:
                                 if (idx > 45) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;
                             default:
@@ -590,16 +637,19 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             case 6:
                                 if (idx > 24) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 5:
                                 if (idx > 18) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 4:
                                 if (idx > 27) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             default:
@@ -610,11 +660,13 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             case 6:
                                 if (idx > 26) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break; 
                             case 5:
                                 if (idx > 20) {
                                     doubleDown(hand, deck, gm);
+                                    return 1;
                                 }
                                 break;  
                             default:
@@ -642,21 +694,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 case 3:
                                     if (hiLoIdx > 20) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > 12) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > 8) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > 8) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -667,21 +723,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 case 3:
                                     if (hiLoIdx > 9) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > 5) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > 1) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > 0) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -692,21 +752,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 case 3:
                                     if (hiLoIdx > -2) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > -15) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > -18) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > -23) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -718,27 +782,32 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     if (hiLoIdx > 1) {
                                         if (hiLoIdx < 10) {
                                             doubleDown(hand, deck, gm);
+                                            return 1;
                                         }
                                     }
                                     break;
                                 case 3:
                                     if (hiLoIdx > -6) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > -14) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > -28) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > -30) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -749,21 +818,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 case 3:
                                     if (hiLoIdx > 21) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > -6) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > -16) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > -32) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -774,21 +847,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 case 3:
                                     if (hiLoIdx > 19) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > -7) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > -16) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > -23) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -799,21 +876,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 case 3:
                                     if (hiLoIdx > 11) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > -3) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > -13) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > -19) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -824,21 +905,25 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 case 3:
                                     if (hiLoIdx > 10) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 4:
                                     if (hiLoIdx > 2) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 5:
                                     if (hiLoIdx > -19) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 case 6:
                                     if (hiLoIdx > -13) {
                                         doubleDown(hand, deck, gm);
+                                        return 1;
                                     }
                                     break;
                                 default:
@@ -1256,6 +1341,18 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
 
 
 void Player::splitPair(int hand, Deck* deck, Game* gm) {
+    if (constants::LOGGING) {
+        for (int i = 0; i < hands.size(); i++) {
+                std::cout << "Hand " << i << ": ";
+                for (Card* c : hands[i]) {
+                    std::cout << c->getValue() << " ";
+                }
+                std::cout << std::endl;
+        }
+        std::cout << "------" << std::endl;
+    }
+    
+    
     std::vector<Card*> newHand;
     newHand.push_back(hands[hand][1]);
     // Get rid of one of the pairs cards
@@ -1264,17 +1361,42 @@ void Player::splitPair(int hand, Deck* deck, Game* gm) {
     hands.push_back(newHand);
     // Deal one new card on each hand
     dealCard(deck->getTop(), hand, gm);
-    dealCard(deck->getTop(), hand+1, gm);
+    dealCard(deck->getTop(), hands.size()-1, gm);
+
+    splitPairCnt += 1;
+    if (constants::LOGGING) {
+        for (int i = 0; i < hands.size(); i++) {
+            //
+            if (hands[i].size() > 2) {
+                std::cout << "AHHHHHHHHHHHHHHJHJHJHJHJHJHJHJHJHJHJHHHHHHHHHHHHHGGGGGGGGGGGGGGGGGGGGGGGGHGHHHHHGHHHHGHHHH" << std::endl;
+                
+                for (int i = 0; i < hands.size(); i++) {
+                    std::cout << "Hand " << i << ": ";
+                    for (Card* c : hands[i]) {
+                        std::cout << c->getValue() << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                std::cout << "------" << std::endl;
+            }
+            
+        }
+    }
+
+    
+    
     
 }
 
 void Player::doubleDown(int hand, Deck* deck, Game* gm) {
     dealCard(deck->getTop(), hand, gm);
     standing[hand] = true;
+    betAmount[hand] += betAmount[hand];
+    doubleDownCnt += 1;
 }
 
-bool Player::isSettled() {
-    return betSettled[0];
+bool Player::isSettled(int hand) {
+    return betSettled[hand];
 }
 
 int Player::getBetAmount(int hand) {
@@ -1308,10 +1430,12 @@ int Player::getCapital() {
 }
 
 void Player::increaseCapital(int win) {
+    winCnt += 1;
     capital += win;
 }
 
 void Player::decreaseCapital(int loss) {
+    lossCnt += 1;
     capital -= loss;
 }
 
@@ -1320,11 +1444,9 @@ void Player::settleBet(int hand) {
     //betAmount = 0;
 }
 
-
 bool Player::isStanding(int hand) {
     return standing[hand];
 }
-
 
 int Player::getNumHands() {
     return hands.size();
@@ -1371,4 +1493,49 @@ bool Player::checkHandMakeup(int hand, int c1, int c2) {
     } else {
         return false;
     }
+}
+
+std::vector<Card*> Player::getHand(int hand) {
+    return hands[hand];
+}
+
+void Player::clearHands() {
+    for (int i = 0; i < hands.size(); i++) {
+        hands[i].clear();
+    }
+    hands.clear();
+}
+
+int Player::getDoubleDownCnt() {
+    return doubleDownCnt;
+}
+
+int Player::getSplitPairCnt() {
+    return splitPairCnt;
+}
+
+int Player::getWinCnt() {
+    return winCnt;
+}
+
+int Player::getLossCnt() {
+    return lossCnt;
+}
+
+void Player::insure(int hand) {
+    insured = true;
+    sideBet = 0.5*betAmount[hand];
+}
+
+bool Player::isInsured() {
+    return insured;
+}
+
+int Player::getSideBet() {
+    return sideBet;
+}
+
+void Player::resetInsurance() {
+    insured = false;
+    sideBet = 0;
 }

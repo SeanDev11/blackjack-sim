@@ -23,6 +23,9 @@ public:
     int getCardCount();
 
     int getUsedCardCount();
+
+    void setAces();
+
 private:
     int numDecks;
 
