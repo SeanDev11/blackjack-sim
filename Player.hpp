@@ -38,12 +38,15 @@ private:
 
     bool standing[4] = {false, false, false, false};
 
-    std::vector<Card*> cards;
+    //std::vector<Card*> cards;
 
     std::vector< std::vector<Card*> > hands;
     
+    void doubleDown(int hand, Deck* deck, Game* gm);
 
     void splitPair(int hand, Deck* deck, Game* gm);
+
+    bool isHardHand(int hand);
 };
 
 #endif

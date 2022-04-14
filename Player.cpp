@@ -40,7 +40,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
     if (score == 21) {return 1;}
 
     // Check for pair
-    if ((cards.size() == 2) && (hands.size() < 4)) {
+    if ((hands[hand].size() == 2) && (hands.size() < 4)) {
         if (hands[hand][0]->getValue() == hands[hand][1]->getValue()) {
             switch (hands[hand][0]->getValue()) {
                 case 11:
@@ -357,9 +357,9 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
             }
         }
     }
+    
     // Done checking pairs
     
-
     if (score > 21) {
         for (Card *c : hands[hand]) {
             if (c->getValue() == 11) {
@@ -372,9 +372,267 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
     } else {
         // Decide whether to double down
         // Check if soft or hard hand. Then follow table for decision making
+        if (hands[hand].size() == 2) {
+            if (isHardHand(hand) == true) {
+                // Hard Hand
+                score = getScore(hand);
+                double idx = gm->getHiLoIdx();
+                switch (score) {
+                    case 11:
+                        switch (dealerUpCard) {
+                            case 11:
+                                if (idx > -3) {
+                                    // DOUBLE DOWN
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 10:
+                                if (idx > -9) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 9:
+                                if (idx > -10) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 8:
+                                if (idx > -16) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 7:
+                                if (idx > -26) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 6:
+                                if (idx > -35) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 5:
+                                if (idx > -33) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 4:
+                                if (idx > -29) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 3:
+                                if (idx > -26) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 2:
+                                if (idx > -23) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            default:
+                                break;
+                        }
+                    case 10:
+                        switch (dealerUpCard) {
+                            case 11:
+                                if (idx > 6) {
+                                    // DOUBLE DOWN
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 10:
+                                if (idx > 7) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 9:
+                                if (idx > -3) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 8:
+                                if (idx > -9) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 7:
+                                if (idx > -17) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 6:
+                                if (idx > -26) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 5:
+                                if (idx > -24) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 4:
+                                if (idx > -21) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 3:
+                                if (idx > -17) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 2:
+                                if (idx > -15) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            default:
+                                break;
+                        }
+                    case 9:
+                        switch (dealerUpCard) {
+                            case 8:
+                                if (idx > 14) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 7:
+                                if (idx > 4) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 6:
+                                if (idx > -12) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 5:
+                                if (idx > -10) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 4:
+                                if (idx > -5) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 3:
+                                if (idx > 0) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 2:
+                                if (idx > 3) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            default:
+                                break;
+                        }
+                    case 8:
+                        switch (dealerUpCard) {
+                            case 7:
+                                if (idx > 22) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            case 6:
+                                if (idx > 5) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 5:
+                                if (idx > 5) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 4:
+                                if (idx > 11) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 3:
+                                if (idx > 22) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    case 7:
+                        switch (dealerUpCard) {
+                            case 6:
+                                if (idx > 17) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 5:
+                                if (idx > 14) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 4:
+                                if (idx > 21) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 3:
+                                if (idx > 45) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    case 6:
+                        switch (dealerUpCard) {
+                            case 6:
+                                if (idx > 24) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 5:
+                                if (idx > 18) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 4:
+                                if (idx > 27) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            default:
+                                break;
+                        }
+                    case 5:
+                        switch (dealerUpCard) {
+                            case 6:
+                                if (idx > 26) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break; 
+                            case 5:
+                                if (idx > 20) {
+                                    doubleDown(hand, deck, gm);
+                                }
+                                break;  
+                            default:
+                                break;
+                        }
+                    default:
+                        break;
 
+                }
+            } else {
+                // Soft Hand
 
+            }
+        }
     }
+
+    // Done checking for doubling down
+    // Decide whether to draw or stand
 
 
     return decision;
@@ -394,6 +652,10 @@ void Player::splitPair(int hand, Deck* deck, Game* gm) {
     
 }
 
+void Player::doubleDown(int hand, Deck* deck, Game* gm) {
+    dealCard(deck->getTop(), hand, gm);
+    standing[hand] = true;
+}
 
 bool Player::isSettled() {
     return betSettled[0];
@@ -450,4 +712,29 @@ bool Player::isStanding(int hand) {
 
 int Player::getNumHands() {
     return hands.size();
+}
+
+bool Player::isHardHand(int hand) {
+    // returns true if hard, false if soft
+    bool hard = true;
+
+    for (Card *c : hands[hand]) {
+        if (c->getValue() == 11) {
+            if (getScore(hand) < 22) {
+                return false;
+            } else {
+                c->setValue(1);
+            }
+        } else if (c->getValue() == 1) {
+            c->setValue(11);
+            if (getScore(hand) < 22) {
+                return false;
+            } else {
+                c->setValue(1);
+            }
+
+        }
+
+    }
+    return hard;
 }
