@@ -4,7 +4,7 @@
 #include "Game.hpp"
 
 int main() {
-    Game game = Game(1, 1, 24);
+    Game game = Game(1, 1, 1);
 
     std::cout << "Testing" << std::endl;
 

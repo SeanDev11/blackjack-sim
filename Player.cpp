@@ -852,9 +852,403 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
             }
         }
     }
-
+    if (standing[hand] == true) {return 1;}
     // Done checking for doubling down
     // Decide whether to draw or stand
+
+    if (isHardHand(hand) == true) {
+        // hard hand
+        score = getScore(hand);
+        if (score > 17) {
+            return 1;
+        } else if (score == 17) {
+            if (dealerUpCard == 11) {
+                if (hiLoIdx > -15) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                return 1;
+            }
+        } else if (score == 16) {
+            switch (dealerUpCard) {
+                case 2:
+                    if (hiLoIdx > -21) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 3:
+                    if (hiLoIdx > -25) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 4:
+                    if (hiLoIdx > -30) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 5:
+                    if (hiLoIdx > -34) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 6:
+                    if (hiLoIdx > -35) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 7:
+                    if (hiLoIdx > 10) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 8:
+                    if (hiLoIdx > 11) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 9:
+                    if (hiLoIdx > 6) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 10:
+                    if (hiLoIdx > 2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 11:
+                    if (hiLoIdx > 14) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else if (score == 15) {
+            switch (dealerUpCard) {
+                case 2:
+                    if (hiLoIdx > -12) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 3:
+                    if (hiLoIdx > -17) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 4:
+                    if (hiLoIdx > -21) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 5:
+                    if (hiLoIdx > -26) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 6:
+                    if (hiLoIdx > -28) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 7:
+                    if (hiLoIdx > 13) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 8:
+                    if (hiLoIdx > 15) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 9:
+                    if (hiLoIdx > 12) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 10:
+                    if (hiLoIdx > 8) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 11:
+                    if (hiLoIdx > 16) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else if (score == 14) {
+            switch (dealerUpCard) {
+                case 2:
+                    if (hiLoIdx > -5) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 3:
+                    if (hiLoIdx > -8) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 4:
+                    if (hiLoIdx > -13) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 5:
+                    if (hiLoIdx > -17) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 6:
+                    if (hiLoIdx > -17) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 7:
+                    if (hiLoIdx > 20) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 8:
+                    if (hiLoIdx > 38) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                default:
+                    return 0;
+                    break;
+            }
+        } else if (score == 13) {
+            switch (dealerUpCard) {
+                case 2:
+                    if (hiLoIdx > 1) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 3:
+                    if (hiLoIdx > -2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 4:
+                    if (hiLoIdx > -5) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 5:
+                    if (hiLoIdx > -9) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 6:
+                    if (hiLoIdx > -8) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 7:
+                    if (hiLoIdx > 50) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                default:
+                    return 0;
+                    break;
+            }
+        } else if (score == 12) {
+            switch (dealerUpCard) {
+                case 2:
+                    if (hiLoIdx > -21) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 3:
+                    if (hiLoIdx > -25) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 4:
+                    if (hiLoIdx > -30) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 5:
+                    if (hiLoIdx > -34) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 6:
+                    if (hiLoIdx > -35) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 7:
+                    if (hiLoIdx > 10) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 8:
+                    if (hiLoIdx > 11) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 9:
+                    if (hiLoIdx > 6) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 10:
+                    if (hiLoIdx > 2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 11:
+                    if (hiLoIdx > 14) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            return 0;
+        }
+
+    } else {
+        // Soft hand
+        score = getScore(hand);
+
+        if (score > 18) {
+            return 1;
+        } else if (score == 18) {
+            switch (dealerUpCard) {
+                case 9:
+                    return 0;
+                    break;
+                case 10:
+                    if (hiLoIdx > 12) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 11:
+                    if (hiLoIdx > -6) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                default:
+                    return 1;
+                    break;
+            }
+        } else if (score == 17) {
+            if (dealerUpCard < 7) {
+                return 0;
+            } else if (dealerUpCard == 7) {
+                if (hiLoIdx > 29) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+
+
+    }
 
 
     return decision;
@@ -956,7 +1350,6 @@ bool Player::isHardHand(int hand) {
             }
 
         }
-
     }
     return hard;
 }
