@@ -48,7 +48,7 @@ int Dealer::getUpCard() {
 }
 
 Card* Dealer::getCard(int i) {
-    return cards[1];
+    return cards[i];
 }
 
 std::vector<Card*> Dealer::getHand() {

@@ -5,17 +5,20 @@
 
 #include <vector>
 
-#include "Deck.hpp"
+
 #include "Dealer.hpp"
 #include "Card.hpp"
 
 namespace constants
 {
     const bool LOGGING = false;
-
+    const bool TRACING = false;
+    const bool DOUBLING = true;
+    const bool SPLITTING = true;
 }
 
 class Player;
+class Deck;
 
 class Game
 {
@@ -29,8 +32,14 @@ public:
     double getHiLoIdx();
 
     int getPointCount();
+    void setPointCount(int i);
 
+    void setTotalSeenCards(int i);
     void printPlayerStats();
+
+    int getPlayerBalance(int i);
+
+    void incrementShuffleCount();
 
 private:
     std::vector<Player*> players;
@@ -38,8 +47,6 @@ private:
     Deck *deck;
 
     Dealer dealer;
-
-    //int usedCardsCount = 0;
 
     int totalSeenCards = 0;
 
@@ -60,6 +67,8 @@ private:
     int playerNaturalCnt[7] = {0,0,0,0,0,0,0};
 
     int playerTieCnt[7] = {0,0,0,0,0,0,0};
+
+    int dealerNaturalCnt = 0;
     
 };
 

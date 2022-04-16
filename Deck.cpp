@@ -2,7 +2,7 @@
 
 #include "Deck.hpp"
 #include "Card.hpp"
-
+#include "Game.hpp"
 
 Deck::Deck(int numberOfDecks) 
     : numDecks{numberOfDecks}
@@ -14,7 +14,7 @@ Deck::Deck(int numberOfDecks)
         }
     }
     // Add face cards for each deck
-    for (int i = 0; i < 3*numDecks; i++) {
+    for (int i = 0; i < 3; i++) {
         for (int x = 0; x < 4*numDecks; x++) {
             unusedCards.push_back(new Card(10));
         }
@@ -33,6 +33,9 @@ void Deck::shuffle()
     if (usedCards.size() != 0) {
         std::cout << "ERROR IN SHUFFLE!!!";
     }
+
+    setAces();
+
     // Shuffle all unused cards
     std::random_device rd;
     std::default_random_engine rng(rd());
@@ -44,16 +47,29 @@ int Deck::getCardCount() {
     return numDecks*52;
 }
 
-Card* Deck::getTop() {
+Card* Deck::getTop(Game * gm) {
     // Gets and removes top (back) card
+    // ADDED THIS TO DEAL DOWN TO FEWER CARDS
+    if (unusedCards.size() == 0) {
+        
+        shuffle();
+        burnCard(gm);
+        gm->setPointCount(0);
+        gm->setTotalSeenCards(0);
+        gm->incrementShuffleCount();
+        
+    }
     Card* c = unusedCards.back();
+    
     usedCards.push_back(c);
+    
     unusedCards.pop_back();    
+    
     return c;
 }
 
-void Deck::burnCard() {
-    getTop();
+void Deck::burnCard(Game * gm) {
+    getTop(gm);
 }
 
 
@@ -67,4 +83,30 @@ void Deck::setAces() {
             c->setValue(11);
         }
     } 
+}
+
+void Deck::printDeck() {
+    shuffle();
+    int cardCount[10] = { 0 };
+    /*int two = 0;
+    int three = 0;
+    int four = 0;
+    int five = 0;
+    int six = 0;
+    int seven = 0;
+    int eight = 0;
+    int nine = 0;
+    int ten = 0;
+    int eleven = 0;*/
+    
+    for (Card* c : unusedCards) {
+        cardCount[c->getValue()-2] += 1;
+        //std::cout << c->getValue() << std::endl;
+    }
+
+    for (int i = 0; i < 10; i++) {
+        std::cout << i+2 << "'s: " << cardCount[i] << std::endl;
+    }
+
+
 }

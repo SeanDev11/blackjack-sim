@@ -23,6 +23,7 @@ void Player::placeBet(double idx) {
         bet = 50;
     }
     betAmount[0] = bet;
+    totalInitialBets += bet;
 }
 
 void Player::resetBets() {
@@ -33,6 +34,138 @@ void Player::resetBets() {
     }
 }
 
+int Player::makeDecision_v2(int dealerUpCard, int hand, Deck* deck, double hiLoIdx, Game* gm) {
+
+    // Check for pair and split it if necessary
+    if (hands[hand].size() == 2) {
+        if (hands.size() < 4) {
+            if (hands[hand][0]->getValue() == hands[hand][1]->getValue()) {
+                int threshold = pairSplitDecision[hands[hand][0]->getValue() - 1][dealerUpCard - 1];
+                if (threshold == 200) {
+                    splitPair(hand, deck, gm);
+                    return makeDecision_v2(dealerUpCard, hand, deck, gm->getHiLoIdx(), gm);
+                } else if (threshold == 300) {
+                    // Never split
+                } else {
+                    if ((dealerUpCard == 10) && (hands[hand][0]->getValue() == 8)) {
+                        if (gm->getHiLoIdx() < threshold) {
+                            splitPair(hand, deck, gm);
+                            return makeDecision_v2(dealerUpCard, hand, deck, gm->getHiLoIdx(), gm);
+                        }
+                    } else if ((dealerUpCard == 8) && (hands[hand][0]->getValue() == 3)) {
+                        if ((gm->getHiLoIdx() > threshold) || (gm->getHiLoIdx() < -2)) {
+                            splitPair(hand, deck, gm);
+                            return makeDecision_v2(dealerUpCard, hand, deck, gm->getHiLoIdx(), gm);
+                        }
+                    } else if (gm->getHiLoIdx() > threshold) {
+                        splitPair(hand, deck, gm);
+                        return makeDecision_v2(dealerUpCard, hand, deck, gm->getHiLoIdx(), gm);
+                    }
+                }
+
+            }
+        }
+    }
+
+    // Check for busts
+    int score = getScore(hand);
+    if (score > 21) {
+        for (Card *c : hands[hand]) {
+            if (c->getValue() == 11) {
+                c->setValue(1);
+                return makeDecision_v2(dealerUpCard, hand, deck, gm->getHiLoIdx(), gm);
+            } 
+        }
+        return 1;
+    }
+
+    // Double down, only if hand of 2 cards
+    if ((hands[hand].size() == 2)) {
+        if (isHardHand(hand) == false) {
+            // Soft hand
+            int aceIdx = 1;
+            int otherIndex = 0;
+            if ((hands[hand][0]->getValue() == 1) || (hands[hand][0]->getValue() == 11)) {
+                aceIdx = 0;
+                otherIndex = 1;
+            }
+            int threshold = softDoubleDownDecision[hands[hand][otherIndex]->getValue() - 1][dealerUpCard - 1];
+            if ((hands[hand][otherIndex]->getValue() == 6) && (dealerUpCard == 2)) {
+                if ((gm->getHiLoIdx() > threshold) && (gm->getHiLoIdx() < 10)) {
+                    doubleDown(hand, deck, gm);
+                    return 1;
+                }
+            } else {
+                if (gm->getHiLoIdx() > threshold) {
+                    doubleDown(hand, deck, gm);
+                    return 1;
+                }
+            }
+
+        } else {
+            // Hard hand
+            int score = getScore(hand);
+            if ((score < 12) && (score > 4)) {
+                int threshold = hardDoubleDownDecision[score - 5][dealerUpCard - 1];
+                if (gm->getHiLoIdx() > threshold) {
+                    doubleDown(hand, deck, gm);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    // Draw or stand decisions
+
+    if (isHardHand(hand) == true) {
+        int score = getScore(hand);
+        if (score > 17) {
+            return 1;
+        } else if (score < 12) { 
+            return 0;
+        } else {
+            int threshold = hardDrawingDecision[score - 12][dealerUpCard - 1];
+            if (threshold == 200) {
+                // Automatic draw
+                return 0;
+            } else if (threshold == 300) {
+                // Automatic stand
+                return 1;
+            } else {
+                if (gm->getHiLoIdx() > threshold) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+
+        }
+    } else {
+        // Soft hand
+        int score = getScore(hand);
+        if (score > 18) {
+            return 1;
+        } else if (score < 17) {
+            return 0;
+        } else {
+            int threshold = softDrawingDecision[score - 17][dealerUpCard - 1];
+            if (threshold == 200) {
+                return 0;
+            } else if (threshold == 300) {
+                return 1;
+            } else {
+                if (gm->getHiLoIdx() > threshold) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+
+    }
+    // See if performance changes when changing this...Theoretically line should never get executed.
+    return 0;
+}
 
 int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx, Game* gm) {
     // DECISION TO HIT OR STAND
@@ -49,7 +182,11 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
 
     if (score == 21) {return 1;}
 
+    hiLoIdx = gm->getHiLoIdx();
+
     // Check for pair
+    if (constants::SPLITTING == true) {
+
     if ((hands[hand].size() == 2) && (hands.size() < 4)) {
         if (hands[hand][0]->getValue() == hands[hand][1]->getValue()) {
             //std::cout << "GOT PAIR" << std::endl;
@@ -63,7 +200,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                         //dealCard(deck->getTop(), hand, gm);
                         //dealCard(deck->getTop(), hand+1);
                         standing[hand] = true;
-                        standing[hand+1] = true;
+                        standing[hands.size()-1] = true;
                         return 1;
                         // ONLY FOR NON ACESreturn makeDecision(dealerUpCard, hand);
 
@@ -74,7 +211,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             //dealCard(deck->getTop(), hand);
                             //dealCard(deck->getTop(), hand+1);
                             standing[hand] = true;
-                            standing[hand+1] = true;
+                            standing[hands.size()-1] = true;
                             return 1;
                         }
                     } else if (dealerUpCard == 8) {
@@ -84,7 +221,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             //dealCard(deck->getTop(), hand);
                             //dealCard(deck->getTop(), hand+1);
                             standing[hand] = true;
-                            standing[hand+1] = true;
+                            standing[hands.size()-1] = true;
                             return 1;
                         }
                     } else if (dealerUpCard == 9) {
@@ -94,7 +231,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             //dealCard(deck->getTop(), hand);
                             //dealCard(deck->getTop(), hand+1);
                             standing[hand] = true;
-                            standing[hand+1] = true;
+                            standing[hands.size()-1] = true;
                             return 1;
                         }
                     } else if (dealerUpCard == 10) {
@@ -104,7 +241,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             ///dealCard(deck->getTop(), hand);
                             //dealCard(deck->getTop(), hand+1);
                             standing[hand] = true;
-                            standing[hand+1] = true;
+                            standing[hands.size()-1] = true;
                             return 1;
                         }
                     } else if (dealerUpCard == 11) {
@@ -114,7 +251,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             //dealCard(deck->getTop(), hand);
                             //dealCard(deck->getTop(), hand+1);
                             standing[hand] = true;
-                            standing[hand+1] = true;
+                            standing[hands.size()-1] = true;
                             return 1;
                         }
                     }
@@ -368,19 +505,30 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
             }
         }
     }
-    
+    // SPLITTING curly
+    }
+
+
     // Done checking pairs
-    
+    score = getScore(hand);
     if (score > 21) {
+        bool hasAce = false;
         for (Card *c : hands[hand]) {
             if (c->getValue() == 11) {
+                hasAce = true;
                 c->setValue(1);
                 return makeDecision(dealerUpCard, hand, deck, hiLoIdx, gm);
-            } else {
-                return 1;
-            }
+            } 
         }
+
+        if ((hasAce == false) && (getScore(hand) > 21)) {
+            return 1;
+        }
+
     } else {
+
+        
+        if (constants::DOUBLING == true) {
         // Decide whether to double down
         // Check if soft or hard hand. Then follow table for decision making
         if (hands[hand].size() == 2) {
@@ -455,6 +603,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             default:
                                 break;
                         }
+                        break;
                     case 10:
                         switch (dealerUpCard) {
                             case 11:
@@ -521,6 +670,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             default:
                                 break;
                         }
+                        break;
                     case 9:
                         switch (dealerUpCard) {
                             case 8:
@@ -568,6 +718,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             default:
                                 break;
                         }
+                        break;
                     case 8:
                         switch (dealerUpCard) {
                             case 7:
@@ -603,6 +754,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             default:
                                 break;
                         }
+                        break;
                     case 7:
                         switch (dealerUpCard) {
                             case 6:
@@ -632,6 +784,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             default:
                                 break;
                         }
+                        break;
                     case 6:
                         switch (dealerUpCard) {
                             case 6:
@@ -655,6 +808,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             default:
                                 break;
                         }
+                        break;
                     case 5:
                         switch (dealerUpCard) {
                             case 6:
@@ -672,6 +826,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                             default:
                                 break;
                         }
+                        break;
                     default:
                         break;
                 }
@@ -680,7 +835,7 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                 int aceIdx = -1;
                 int otherIdx = 1;
                 for (int i = 0; i < 2; i++) {
-                    if (hands[hand][i]->getValue() == 11) {
+                    if ((hands[hand][i]->getValue() == 11) || (hands[hand][i]->getValue() == 1)) {
                         aceIdx = i;
                     }
                 }
@@ -717,7 +872,8 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     break;
                                 default:
                                     break;
-                            }       
+                            }
+                            break;       
                         case 8:
                             switch(dealerUpCard) {
                                 case 3:
@@ -746,7 +902,8 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     break;
                                 default:
                                     break;
-                            }      
+                            }
+                            break;      
                         case 7:
                             switch(dealerUpCard) {
                                 case 3:
@@ -775,7 +932,8 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     break;
                                 default:
                                     break;
-                            }      
+                            }
+                            break;      
                         case 6:
                             switch(dealerUpCard) {
                                 case 2:
@@ -812,7 +970,8 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     break;
                                 default:
                                     break;
-                            }      
+                            }
+                            break;      
                         case 5:
                             switch(dealerUpCard) {
                                 case 3:
@@ -841,7 +1000,8 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     break;
                                 default:
                                     break;
-                            }      
+                            }
+                            break;      
                         case 4:
                             switch(dealerUpCard) {
                                 case 3:
@@ -870,7 +1030,8 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     break;
                                 default:
                                     break;
-                            }      
+                            }
+                            break;      
                         case 3:
                             switch(dealerUpCard) {
                                 case 3:
@@ -899,7 +1060,8 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                     break;
                                 default:
                                     break;
-                            }      
+                            }
+                            break;      
                         case 2:
                             switch(dealerUpCard) {
                                 case 3:
@@ -929,18 +1091,24 @@ int Player::makeDecision(int dealerUpCard, int hand, Deck* deck, double hiLoIdx,
                                 default:
                                     break;
                             }      
-
+                            break;
                         default:
                             break;
                     }
                 }
             }
         }
+    // Doubling curly
     }
+    
+    }
+
+    
+
     if (standing[hand] == true) {return 1;}
     // Done checking for doubling down
     // Decide whether to draw or stand
-
+    hiLoIdx = gm->getHiLoIdx();
     if (isHardHand(hand) == true) {
         // hard hand
         score = getScore(hand);
@@ -1360,8 +1528,10 @@ void Player::splitPair(int hand, Deck* deck, Game* gm) {
     // Add new hand with one card
     hands.push_back(newHand);
     // Deal one new card on each hand
-    dealCard(deck->getTop(), hand, gm);
-    dealCard(deck->getTop(), hands.size()-1, gm);
+    dealCard(deck->getTop(gm), hand, gm);
+    dealCard(deck->getTop(gm), hands.size()-1, gm);
+
+    betAmount[hands.size()-1] = betAmount[hand];
 
     splitPairCnt += 1;
     if (constants::LOGGING) {
@@ -1389,7 +1559,7 @@ void Player::splitPair(int hand, Deck* deck, Game* gm) {
 }
 
 void Player::doubleDown(int hand, Deck* deck, Game* gm) {
-    dealCard(deck->getTop(), hand, gm);
+    dealCard(deck->getTop(gm), hand, gm);
     standing[hand] = true;
     betAmount[hand] += betAmount[hand];
     doubleDownCnt += 1;
@@ -1409,6 +1579,16 @@ int Player::getScore(int hand) {
         // Add up scores
         score += c->getValue();
     }
+
+    
+    for (Card *c : hands[hand]) {
+        if (score > 21) {
+            if (c->getValue() == 11) {
+                c->setValue(1);
+            }
+        }
+    }
+
     return score;
 }
 
@@ -1430,11 +1610,17 @@ int Player::getCapital() {
 }
 
 void Player::increaseCapital(int win) {
+    if (win > getMaxWin()) {
+        setMaxWin(win);
+    } 
     winCnt += 1;
     capital += win;
 }
 
 void Player::decreaseCapital(int loss) {
+    if (loss > getMaxLoss()) {
+        setMaxLoss(loss);
+    }
     lossCnt += 1;
     capital -= loss;
 }
@@ -1539,3 +1725,41 @@ void Player::resetInsurance() {
     insured = false;
     sideBet = 0;
 }
+
+void Player::incrementBustCnt() {
+    bustCnt += 1;
+}
+
+int Player::getBustCnt() {
+    return bustCnt;
+}
+
+int Player::getTotalInitialBets() {
+    return totalInitialBets;
+}
+
+int Player::getMaxLoss() {
+    return maxLoss;
+}
+
+int Player::getMaxWin() {
+    return maxWin;
+}
+
+void Player::setMaxLoss(int loss) {
+    maxLoss = loss;
+}
+
+void Player::setMaxWin(int win) {
+    maxWin = win;
+}
+
+bool Player::hasAce(int hand) {
+    
+    for (Card *c : hands[hand]) {
+        if ((c->getValue() == 1) || (c->getValue() == 11)) {
+            return true;
+        }
+    }
+    return false;
+} 

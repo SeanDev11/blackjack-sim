@@ -10,6 +10,8 @@
 
 #include "Card.hpp"
 
+class Game;
+
 class Deck
 {
 public:
@@ -17,14 +19,16 @@ public:
     Deck(int numberOfDecks);
 
     void shuffle();
-    void burnCard();
+    void burnCard(Game * gm);
 
-    Card* getTop();
+    Card* getTop(Game * gm);
     int getCardCount();
 
     int getUsedCardCount();
 
     void setAces();
+
+    void printDeck();
 
 private:
     int numDecks;
